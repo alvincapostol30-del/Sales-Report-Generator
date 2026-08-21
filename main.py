@@ -2,16 +2,8 @@ import csv
 from openpyxl import Workbook
 from datetime import datetime
 
-#read csv file and print values
-with open("Input/sales.csv", newline="") as file:
-    reader = csv.DictReader(file, delimiter="\t")
-    for row in reader:
-        print(f"Product: {row['Product']}")
-        print(f"Salesperson: {row['Salesperson']}")
-        print(f"Order ID: {row['Quantity']}")
-        print(f"Unit Price: {row['Unit Price']}")
-        print("-" * 40)
 
+      
 #This block of code will create/format an Excel file and save to output folder 
 workbook = Workbook()
 sheet = workbook.active
@@ -29,6 +21,11 @@ headers = [
     "Total"
 
 ]
+
+
+def calculate_total(quantity,Unit_price):
+    return quantity * Unit_price
+
 #get list length
 max_item = len(headers)
 
@@ -48,3 +45,29 @@ sheet.cell(2,1).value ="Company"
 sheet.cell(2,2).value = "ABC Corporation"
 sheet.cell(3,1).value = "Generated On"
 sheet.cell(3,2).value = generated_on
+
+#Populate Data fields
+counter = 6
+with open("Input/sales.csv", newline="") as file:
+    reader = csv.DictReader(file, delimiter="\t")
+    for each in reader:
+        sheet.cell(row = counter, column= 1).value = each['Order ID']
+        sheet.cell(row = counter, column= 2).value = each['Date']
+        sheet.cell(row = counter, column= 3).value = each['Salesperson']
+        sheet.cell(row = counter, column= 4).value = each['Department']
+        sheet.cell(row = counter, column= 5).value = each['Product']
+        sheet.cell(row = counter, column= 6).value = each['Quantity']
+        sheet.cell(row = counter, column= 7).value = each['Unit Price']
+        quantity = each['Quantity']
+        unit_price = each['Unit Price']
+        int_quantity = int(quantity)
+        int_price = int(unit_price)
+        total = calculate_total(int_quantity,int_price)
+        sheet.cell(row = counter, column= 8).value = total
+
+        counter = counter +1
+        
+        
+
+filename = datetime.now().strftime("Output/Sales_Report_%Y%m%d_%H%M%S.xlsx")
+workbook.save(filename)
