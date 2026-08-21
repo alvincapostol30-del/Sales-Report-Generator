@@ -1,6 +1,7 @@
 import csv
 from openpyxl import Workbook
 from datetime import datetime
+from openpyxl.styles import Font, PatternFill, Alignment
 
 
       
@@ -33,6 +34,9 @@ max_item = len(headers)
 for r in range(1, max_item+1):
     print(headers[r-1])
     sheet.cell(5,r).value = headers[r-1]
+    sheet.cell(5,r).font = Font(bold= True,color="FFFFFF")
+    sheet.cell(5,r).fill = PatternFill(fill_type="solid",start_color="1F4E78")
+    sheet.cell(5,r).alignment = Alignment(horizontal="center")
 
 
 #Extract todays date with hours/mm/ss
@@ -57,17 +61,41 @@ with open("Input/sales.csv", newline="") as file:
         sheet.cell(row = counter, column= 4).value = each['Department']
         sheet.cell(row = counter, column= 5).value = each['Product']
         sheet.cell(row = counter, column= 6).value = each['Quantity']
-        sheet.cell(row = counter, column= 7).value = each['Unit Price']
+        
         quantity = each['Quantity']
         unit_price = each['Unit Price']
-        int_quantity = int(quantity)
         int_price = int(unit_price)
+        sheet.cell(row = counter, column= 7).value = int_price
+        sheet.cell(row = counter, column= 7).number_format ="₱#,##0.00"
+        int_quantity = int(quantity)
+        
         total = calculate_total(int_quantity,int_price)
         sheet.cell(row = counter, column= 8).value = total
+        sheet.cell(row = counter, column= 8).number_format ="₱#,##0.00"
 
         counter = counter +1
         
         
+
+#Format style
+sheet.cell(1,1).font = Font(bold=True,size=16)
+
+
+#Auto fit columns
+for column in sheet.columns:
+    max_length = 0
+    for cell in column:
+        if cell.value is not None:
+            if len(str(cell.value)) > max_length:
+                max_length = len(str(cell.value)) 
+    column_letter = column[0].column_letter
+    sheet.column_dimensions[column_letter].width = max_length+2
+
+
+sheet.column_dimensions["G"].width += 4
+sheet.column_dimensions["H"].width += 4
+
+
 
 filename = datetime.now().strftime("Output/Sales_Report_%Y%m%d_%H%M%S.xlsx")
 workbook.save(filename)
