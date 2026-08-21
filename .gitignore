@@ -1,0 +1,13 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# Generated reports
+Output/
+
+# Virtual Environment
+venv/
+.env/
