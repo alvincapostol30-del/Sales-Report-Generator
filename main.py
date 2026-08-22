@@ -2,8 +2,16 @@ import csv
 from openpyxl import Workbook
 from datetime import datetime
 from openpyxl.styles import Font, PatternFill, Alignment
+from openpyxl.styles import Border, Side
 
+thin = Side(style="thin")
 
+border = Border(
+    left=thin,
+    right=thin,
+    top=thin,
+    bottom=thin
+)
       
 #This block of code will create/format an Excel file and save to output folder 
 workbook = Workbook()
@@ -95,7 +103,14 @@ for column in sheet.columns:
 sheet.column_dimensions["G"].width += 4
 sheet.column_dimensions["H"].width += 4
 
+#Add border
+for row in sheet.iter_rows(min_row=5, max_row=counter-1):
+    for cell in row:
+        cell.border = border
 
+
+#Freeze column
+sheet.freeze_panes = "A6"
 
 filename = datetime.now().strftime("Output/Sales_Report_%Y%m%d_%H%M%S.xlsx")
 workbook.save(filename)
