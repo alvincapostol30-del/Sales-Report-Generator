@@ -18,6 +18,7 @@ workbook = Workbook()
 sheet = workbook.active
 sheet.title = "Sales Report"
 
+
 #Define headers
 headers = [
     "Order ID",
@@ -109,8 +110,14 @@ for row in sheet.iter_rows(min_row=5, max_row=counter-1):
         cell.border = border
 
 
+
 #Freeze column
 sheet.freeze_panes = "A6"
+
+#Merge title cells
+sheet.merge_cells("A1:H1")
+sheet["A1"].alignment = Alignment(horizontal="center")
+
 
 filename = datetime.now().strftime("Output/Sales_Report_%Y%m%d_%H%M%S.xlsx")
 workbook.save(filename)
