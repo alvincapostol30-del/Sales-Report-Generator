@@ -19,7 +19,7 @@ sheet = workbook.active
 sheet.title = "Sales Report"
 
 
-#Define headers
+#Define headers list
 headers = [
     "Order ID",
     "Date",
@@ -117,6 +117,12 @@ sheet.freeze_panes = "A6"
 #Merge title cells
 sheet.merge_cells("A1:H1")
 sheet["A1"].alignment = Alignment(horizontal="center")
+
+
+#Add Grandtotal
+
+sheet.cell(counter,7).value = " Grand Total"
+sheet.cell(counter,7).font = Font(bold=True)
 
 
 filename = datetime.now().strftime("Output/Sales_Report_%Y%m%d_%H%M%S.xlsx")
