@@ -119,10 +119,22 @@ sheet.merge_cells("A1:H1")
 sheet["A1"].alignment = Alignment(horizontal="center")
 
 
-#Add Grandtotal
+#Add Grandtotal label
 
 sheet.cell(counter,7).value = " Grand Total"
 sheet.cell(counter,7).font = Font(bold=True)
+
+
+#Add Grandtotal formula
+
+sheet.cell(counter,8).value = f"=SUM(H6:H{counter-1})"
+sheet.cell(counter,8).number_format = "₱#,##0.00"
+sheet.cell(counter,8).font = Font(bold=True)
+sheet.column_dimensions["H"].width = max(
+    sheet.column_dimensions["H"].width,
+    len(str(sheet.cell(counter, 8).value)) + 2
+)
+
 
 
 filename = datetime.now().strftime("Output/Sales_Report_%Y%m%d_%H%M%S.xlsx")
